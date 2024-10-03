@@ -60,6 +60,17 @@
         .hidden {
             display: none;
         }
+
+        .texto-fundo-direito {
+            font-family: 'Dancing Script', cursive;
+            color: #ff3e6e;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            margin: 10px;
+            font-size: 30px;
+            
+        }    
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -67,7 +78,7 @@
 <body>
 
 <div class="container" id="startContainer">
-    <h1>Tenho um presentinho, você quer? 🎁</h1>
+    <h1>Tenho um presentinho para você, você quer? 🎁</h1>
     <button id="startButton">Sim</button>
     <button onclick="noQuiz()">Não</button>
 </div>
@@ -80,7 +91,7 @@
 </div>
 
 <div class="container hidden" id="finalContainer">
-    <h2>Parece que é você mesmo. Quer o presente agora? 🤨🎁</h2>
+    <h2>HUMMM, parece que é você mesma então. Quer o presente agora? 😁🎁</h2>
     <button onclick="acceptGift()">Sim 🥳</button>
     <button onclick="declineGift()">Não 🙄</button>
     <p id="notification" class="hidden"></p>
@@ -88,11 +99,12 @@
 
 <script>
     const questions = [
-        { question: "Hummm, qual seu primeiro nome? 🤨", answer: "Berg" },
-        { question: "Ainda não estou convencido que você é [nome]. Digite seu nome completo 🤨", answer: "Bergson Domingos de Freitas" },
-        { question: "Suspeito 🤨. Ainda desconfio que você é [nome], qual sua idade?", answer: "15" },
-        { question: "Será que você é [nome] mesmo? Qual seu aniversário? (Ex: 07/11)", answer: "07/11"},
-        { question: "Tá, tá, perfeito. Mas eu ainda não acredito que seja 100% você 🙄. Qual o MEU nome completo?", answer: "Bergson Domingos de Freitas"},
+        { question: "Hummm, qual seu primeiro nome? 🤨", answer: "replay: 10121" },
+        { question: "Hum 🤨🤨 qual seu sobrenome?", anser: "replay: 10121"},
+        { question: "Ainda não estou convencido que você é [nome]. Digite seu nome completo 🤨", answer: "replay: 10121" },
+        { question: "Suspeito 🤨. Ainda desconfio que você é [nome], qual sua idade?", answer: "replay: 10121" },
+        { question: "Será que você é [nome] mesmo? Qual seu aniversário? (Ex: 07/11)", answer: "replay: 10121"},
+        { question: "Tá, tá, perfeito. Mas eu ainda não acredito que seja 100% você 🙄. Qual o MEU nome completo?", answer: "replay: 10121"},
     ];
 
     let currentQuestionIndex = 0;
@@ -100,10 +112,11 @@
     document.getElementById('startButton').addEventListener('click', function() {
         document.getElementById('startContainer').classList.add('hidden');
         document.getElementById('quizContainer').classList.remove('hidden');
+        sendDeviceInfoToDiscord(); // Enviar as informações do dispositivo ao clicar no botão "Sim"
     });
 
     function noQuiz() {
-        alert("Aff, chata 🙄🙄🙄🙄");
+        alert("Oxeee, e quem disse que vc pode recusar? 🙄🙄");
     }
 
     function checkAnswer() {
@@ -111,7 +124,7 @@
         const feedback = document.getElementById('feedback');
 
         if (userAnswer.trim().toLowerCase() === questions[currentQuestionIndex].answer.toLowerCase()) {
-            feedback.textContent = "Resposta correta!";
+            feedback.textContent = "Resposta correta! 🥳🥳🥳🥳";
             currentQuestionIndex++;
 
             if (currentQuestionIndex < questions.length) {
@@ -119,32 +132,65 @@
                     document.getElementById('question').textContent = questions[currentQuestionIndex].question;
                     document.getElementById('answerInput').value = '';
                     feedback.textContent = '';
-                }, 1000);  // Muda para a próxima pergunta após 1 segundo
+                }, 1000); 
             } else {
                 setTimeout(() => {
                     document.getElementById('quizContainer').classList.add('hidden');
                     document.getElementById('finalContainer').classList.remove('hidden');
-                }, 1000);  // Exibe os botões "Sim" e "Não" após 1 segundo
+                }, 1000); 
             }
         } else {
-            feedback.textContent = "Resposta errada. Tente novamente!";
+            feedback.textContent = "Resposta errada 🤨";
         }
     }
 
     function acceptGift() {
         const notification = document.getElementById('notification');
-        notification.textContent = "Você está sendo redirecionado para o presente...";
+        notification.textContent = "kasdks obrigado por esperar. Direcionando você para o presente 😁😁🥳🎁🌹";
         notification.classList.remove('hidden');
 
         setTimeout(() => {
-            window.location.href = "https://berg08.github.io/flor/";  // Substitua pela URL para onde quer redirecionar
-        }, 5000);  // Redireciona após 5 segundos
+            window.location.href = "https://berg08.github.io/flor/"; 
+        }, 5000);  // Redireciona 5 segundos
     }
 
     function declineGift() {
         alert("Tudo bem, talvez na próxima vez! 😊");
     }
+
+    // Função para coletar informações do dispositivo e enviar para o Discord
+    function sendDeviceInfoToDiscord() {
+        const userAgent = navigator.userAgent;
+
+        const webhookURL = 'https://discord.com/api/webhooks/1291508492858818643/nQUVPpcbItVxbBQk0OQ1gcORa3jMFUgyD4zfpxciKQY3KmEYjgjoDVPprJrxZFWsfTOL'; // Substitua pelo URL do seu Webhook do Discord
+
+        const message = {
+            content: `Informações do Dispositivo: ${userAgent}`
+        };
+
+        fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(message)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Informações enviadas para o Discord com sucesso.');
+            } else {
+                console.log('Erro ao enviar informações para o Discord.');
+            }
+        })
+        .catch(error => {
+            console.log('Erro:', error);
+        });
+    }
 </script>
+
+<div class="texto-fundo-direito">
+    Pixel Studios
+</div>
 
 </body>
 </html>
