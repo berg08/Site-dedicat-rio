@@ -3,56 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>😍</title>
+    <title>😍 Um Presente Especial</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #b81291;
+            background: linear-gradient(135deg, #ff6b6b, #f7f7f7);
         }
         .container {
             text-align: center;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            transition: transform 0.3s;
         }
-        .hidden {
-            display: none;
+        .container:hover {
+            transform: scale(1.05);
+        }
+        h1, h2 {
+            font-family: 'Dancing Script', cursive;
+            color: #ff3e6e;
         }
         button {
             margin: 10px;
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background-color: #ff6b6b;
+            color: white;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #ff3e6e;
+            transform: translateY(-2px);
         }
         input[type="text"] {
             padding: 10px;
             font-size: 16px;
-            width: 80%;
+            width: calc(100% - 22px);
             margin-bottom: 10px;
-        }
-        .final-container {
-            text-align: center;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ff6b6b;
+            border-radius: 5px;
         }
         #notification {
             font-size: 16px;
             color: red;
         }
+        .hidden {
+            display: none;
+        }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="container" id="startContainer">
-    <h1>Tenho um presente pra você, quer?</h1>
+    <h1>Tenho um presentinho, você quer? 🎁</h1>
     <button id="startButton">Sim</button>
     <button onclick="noQuiz()">Não</button>
 </div>
@@ -64,32 +79,31 @@
     <p id="feedback"></p>
 </div>
 
-<div class="final-container hidden" id="finalContainer">
-    <h2>Você quer receber seu presente agora? 🥳</h2>
-    <button onclick="acceptGift()">Sim</button>
-    <button onclick="declineGift()">Não</button>
+<div class="container hidden" id="finalContainer">
+    <h2>Parece que é você mesmo. Quer o presente agora? 🤨🎁</h2>
+    <button onclick="acceptGift()">Sim 🥳</button>
+    <button onclick="declineGift()">Não 🙄</button>
     <p id="notification" class="hidden"></p>
 </div>
 
 <script>
     const questions = [
         { question: "Hummm, qual seu primeiro nome? 🤨", answer: "Berg" },
-        { question: "Ainda não estou convencido que você é [nome]. Digite seu nome completo", answer: "Bergson Domingos de Freitas" },
+        { question: "Ainda não estou convencido que você é [nome]. Digite seu nome completo 🤨", answer: "Bergson Domingos de Freitas" },
         { question: "Suspeito 🤨. Ainda desconfio que você é [nome], qual sua idade?", answer: "15" },
-        { question: "Será que você é [nome] mesmo? Qual seu aniversário? (Ex: 07/11)", answer: "22/06"},
-        { question: "Tá, tá, perfeito. Mas eu ainda não acredito que seja 100% você 🙄. Qual o MEU nome completo?", answer: "2"},
+        { question: "Será que você é [nome] mesmo? Qual seu aniversário? (Ex: 07/11)", answer: "07/11"},
+        { question: "Tá, tá, perfeito. Mas eu ainda não acredito que seja 100% você 🙄. Qual o MEU nome completo?", answer: "Bergson Domingos de Freitas"},
     ];
 
     let currentQuestionIndex = 0;
 
-    // Função para iniciar o quiz
     document.getElementById('startButton').addEventListener('click', function() {
         document.getElementById('startContainer').classList.add('hidden');
         document.getElementById('quizContainer').classList.remove('hidden');
     });
 
     function noQuiz() {
-        alert("Ok, talvez na próxima vez!");
+        alert("Aff, chata 🙄🙄🙄🙄");
     }
 
     function checkAnswer() {
