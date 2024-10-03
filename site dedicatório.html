@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>😍</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #b81291;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .hidden {
+            display: none;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 80%;
+            margin-bottom: 10px;
+        }
+        .final-container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        #notification {
+            font-size: 16px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="startContainer">
+    <h1>Tenho um presente pra você, quer?</h1>
+    <button id="startButton">Sim</button>
+    <button onclick="noQuiz()">Não</button>
+</div>
+
+<div class="container hidden" id="quizContainer">
+    <h2 id="question">Hummm, qual seu primeiro nome? 🤨</h2>
+    <input type="text" id="answerInput" placeholder="Digite sua resposta">
+    <button onclick="checkAnswer()">Enviar Resposta</button>
+    <p id="feedback"></p>
+</div>
+
+<div class="final-container hidden" id="finalContainer">
+    <h2>Você quer receber seu presente agora? 🥳</h2>
+    <button onclick="acceptGift()">Sim</button>
+    <button onclick="declineGift()">Não</button>
+    <p id="notification" class="hidden"></p>
+</div>
+
+<script>
+    const questions = [
+        { question: "Hummm, qual seu primeiro nome? 🤨", answer: "Berg" },
+        { question: "Ainda não estou convencido que você é [nome]. Digite seu nome completo", answer: "Bergson Domingos de Freitas" },
+        { question: "Suspeito 🤨. Ainda desconfio que você é [nome], qual sua idade?", answer: "15" },
+        { question: "Será que você é [nome] mesmo? Qual seu aniversário? (Ex: 07/11)", answer: "22/06"},
+        { question: "Tá, tá, perfeito. Mas eu ainda não acredito que seja 100% você 🙄. Qual o MEU nome completo?", answer: "2"},
+    ];
+
+    let currentQuestionIndex = 0;
+
+    // Função para iniciar o quiz
+    document.getElementById('startButton').addEventListener('click', function() {
+        document.getElementById('startContainer').classList.add('hidden');
+        document.getElementById('quizContainer').classList.remove('hidden');
+    });
+
+    function noQuiz() {
+        alert("Ok, talvez na próxima vez!");
+    }
+
+    function checkAnswer() {
+        const userAnswer = document.getElementById('answerInput').value;
+        const feedback = document.getElementById('feedback');
+
+        if (userAnswer.trim().toLowerCase() === questions[currentQuestionIndex].answer.toLowerCase()) {
+            feedback.textContent = "Resposta correta!";
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                setTimeout(() => {
+                    document.getElementById('question').textContent = questions[currentQuestionIndex].question;
+                    document.getElementById('answerInput').value = '';
+                    feedback.textContent = '';
+                }, 1000);  // Muda para a próxima pergunta após 1 segundo
+            } else {
+                setTimeout(() => {
+                    document.getElementById('quizContainer').classList.add('hidden');
+                    document.getElementById('finalContainer').classList.remove('hidden');
+                }, 1000);  // Exibe os botões "Sim" e "Não" após 1 segundo
+            }
+        } else {
+            feedback.textContent = "Resposta errada. Tente novamente!";
+        }
+    }
+
+    function acceptGift() {
+        const notification = document.getElementById('notification');
+        notification.textContent = "Você está sendo redirecionado para o presente...";
+        notification.classList.remove('hidden');
+
+        setTimeout(() => {
+            window.location.href = "https://berg08.github.io/flor/";  // Substitua pela URL para onde quer redirecionar
+        }, 5000);  // Redireciona após 5 segundos
+    }
+
+    function declineGift() {
+        alert("Tudo bem, talvez na próxima vez! 😊");
+    }
+</script>
+
+</body>
+</html>
