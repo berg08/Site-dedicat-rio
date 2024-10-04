@@ -69,7 +69,6 @@
             right: 0;
             margin: 10px;
             font-size: 30px;
-            
         }    
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
@@ -86,12 +85,12 @@
 <div class="container hidden" id="quizContainer">
     <h2 id="question">Hummm, qual seu primeiro nome? 🤨</h2>
     <input type="text" id="answerInput" placeholder="Digite sua resposta">
-    <button onclick="checkAnswer()">Enviar Resposta</button>
+    <button onclick="nextQuestion()">Enviar Resposta</button>
     <p id="feedback"></p>
 </div>
 
 <div class="container hidden" id="finalContainer">
-    <h2>HUMMM, parece que é você mesma então. Quer o presente agora? 😁🎁</h2>
+    <h2 id="finalQuestion"></h2>
     <button onclick="acceptGift()">Sim 🥳</button>
     <button onclick="declineGift()">Não 🙄</button>
     <p id="notification" class="hidden"></p>
@@ -99,73 +98,63 @@
 
 <script>
     const questions = [
-        { question: "Hummm, qual seu primeiro nome? 🤨", answer: "replay: 10121" },
-        { question: "Hum 🤨🤨 qual seu sobrenome?", answer: "replay: 10121"},
-        { question: "Ainda não estou convencido que você é [nome]. Digite seu nome completo 🤨", answer: "replay: 10121" },
-        { question: "Suspeito 🤨. Ainda desconfio que você é [nome], qual sua idade?", answer: "replay: 10121" },
-        { question: "Será que você é [nome] mesmo? Qual seu aniversário? (Ex: 07/11)", answer: "replay: 10121"},
-        { question: "Tá, tá, perfeito. Mas eu ainda não acredito que seja 100% você 🙄. Qual o MEU nome completo?", answer: "replay: 10121"},
+        "Hummm, qual seu primeiro nome? 🤨",
+        "Hum 🤨🤨 qual seu sobrenome?",
+        "Ainda não estou convencido que você é a [nome]. Digite seu nome completo 🤨",
+        "Suspeito 🤨. Ainda desconfio que você é [nome], qual sua idade?",
+        "Será que você é a [nome] mesmo? Qual seu aniversário? (Ex: 07/11)",
+        "Tá, tá, perfeito. Mas eu ainda não acredito que seja 100% você [nome] 🙄. Qual sua cor preferida? 🤨",
     ];
 
     let currentQuestionIndex = 0;
+    let userName = '';
 
     document.getElementById('startButton').addEventListener('click', function() {
         document.getElementById('startContainer').classList.add('hidden');
         document.getElementById('quizContainer').classList.remove('hidden');
-        sendDeviceInfoToDiscord(); // Enviar as informações do dispositivo ao clicar no botão "Sim"
     });
 
     function noQuiz() {
         alert("Oxeee, e quem disse que vc pode recusar? 🙄🙄");
     }
 
-    function checkAnswer() {
+    function nextQuestion() {
         const userAnswer = document.getElementById('answerInput').value;
-        const feedback = document.getElementById('feedback');
 
-        if (userAnswer.trim().toLowerCase() === questions[currentQuestionIndex].answer.toLowerCase()) {
-            feedback.textContent = "Resposta correta! 🥳🥳🥳🥳";
-            currentQuestionIndex++;
+        // Salva o nome do usuário na primeira pergunta
+        if (currentQuestionIndex === 0) {
+            userName = userAnswer.trim();
+        }
 
-            if (currentQuestionIndex < questions.length) {
-                setTimeout(() => {
-                    document.getElementById('question').textContent = questions[currentQuestionIndex].question;
-                    document.getElementById('answerInput').value = '';
-                    feedback.textContent = '';
-                }, 1000); 
-            } else {
-                setTimeout(() => {
-                    document.getElementById('quizContainer').classList.add('hidden');
-                    document.getElementById('finalContainer').classList.remove('hidden');
-                }, 1000); 
-            }
+        // Feedback genérico
+        document.getElementById('feedback').textContent = "Resposta recebida! 🥳"; 
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+            setTimeout(() => {
+                document.getElementById('question').textContent = questions[currentQuestionIndex].replace(/\[nome\]/g, userName);
+                document.getElementById('answerInput').value = '';
+            }, 1000);
         } else {
-            feedback.textContent = "Resposta errada 🤨";
+            setTimeout(() => {
+                document.getElementById('quizContainer').classList.add('hidden');
+                document.getElementById('finalContainer').classList.remove('hidden');
+                document.getElementById('finalQuestion').textContent = `HUMMM, parece que é você mesmo a, ${userName}. Quer o presente agora? 😁🎁`;
+            }, 1000);
         }
     }
 
     function acceptGift() {
         const notification = document.getElementById('notification');
-        notification.textContent = "kasdks obrigado por esperar. Direcionando você para o presente 😁😁🥳🎁🌹";
+        notification.textContent = "Kasdks obrigado por esperar. Direcionando você para o presente 😁😁🥳🎁🌹";
         notification.classList.remove('hidden');
 
-        setTimeout(() => {
-            window.location.href = "https://berg08.github.io/flor/"; 
-        }, 5000);  // Redireciona 5 segundos
-    }
-
-    function declineGift() {
-        alert("Tudo bem, talvez na próxima vez! 😊");
-    }
-
-    // Função para coletar informações do dispositivo e enviar para o Discord
-    function sendDeviceInfoToDiscord() {
-        const userAgent = navigator.userAgent;
-
-        const webhookURL = 'https://discord.com/api/webhooks/1291508492858818643/nQUVPpcbItVxbBQk0OQ1gcORa3jMFUgyD4zfpxciKQY3KmEYjgjoDVPprJrxZFWsfTOL'; // Substitua pelo URL do seu Webhook do Discord
+        // Enviando dados para o webhook
+        const webhookURL = 'https://discord.com/api/webhooks/1291508492858818643/nQUVPpcbItVxbBQk0OQ1gcORa3jMFUgyD4zfpxciKQY3KmEYjgjoDVPprJrxZFWsfTOL'; // URL do seu webhook
 
         const message = {
-            content: `Informações do Dispositivo: ${userAgent}`
+            content: `Usuário que entrou no site: ${userName}`
         };
 
         fetch(webhookURL, {
@@ -185,6 +174,14 @@
         .catch(error => {
             console.log('Erro:', error);
         });
+
+        setTimeout(() => {
+            window.location.href = "https://berg08.github.io/flor/"; 
+        }, 5000);  // Redireciona em 5 segundos
+    }
+
+    function declineGift() {
+        alert("Ih ala, qual foi?? Pode rejeitar não, BORA APERTE EM SIM");
     }
 </script>
 
